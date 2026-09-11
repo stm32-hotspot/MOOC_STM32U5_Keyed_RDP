@@ -1,0 +1,68 @@
+Option byte settings : 
+STM32_Programmer_CLI.exe -c port=SWD mode=UR  -ob displ
+STM32_Programmer_CLI.exe -c port=SWD mode=UR  -ob TZEN=1
+STM32_Programmer_CLI.exe -c port=SWD mode=UR  -ob  SECWM1_PSTRT=0x0 SECWM1_PEND=0x7F SECWM2_PSTRT=0x7F SECWM2_PEND=0x0
+
+Flash the binaries
+STM32_Programmer_CLI.exe -c port=SWD mode=UR –d \Training\MOOC_U5\MOOC1\Handson\GPIO_IOToggle_TrustZone_NonSecure.elf
+STM32_Programmer_CLI.exe -c port=SWD mode=UR –d \Training\MOOC_U5\MOOC1\Handson\GPIO_IOToggle_TrustZone_Secure.elf
+
+Update STlink firmware 
+..\Drivers\FirmwareUpgrade\STLinkUpgrade.jar
+
+Read FLASH_NSSR register 
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug -r32 0x40022020 4
+
+Provision OEM1KEY key 
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug  -lockRDP1 0x01234567 0x89ABCDEF
+
+Provision OEM2KEY key 
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug  -lockRDP2 0xFEDCBA98 0x76543210
+
+RDP level 2
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug  -ob RDP=0xCC
+
+Get authentication ID
+RDP2 to RDP1 regression
+STM32_Programmer_CLI.exe -c port=SWD mode=UR -unlockRDP2 0xFEDCBA98 0x76543210
+
+Check RDP level
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug -ob displ 
+
+Unlock the RDP 0.5 regression: 
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug  -unlockRDP1 0xFEDCBA98 0x76543210
+
+Regression to RDP 0.5
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug  –ob RDP=0x55
+
+Flash again the non secure
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug  –d \Training\MOOC_U5\MOOC1\Handson\GPIO_IOToggle_TrustZone_NonSecure.elf
+
+RDP 0.5 to RDP1
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug  -ob RDP=0xDC
+
+Unlock the RDP 0 regression 
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug   -unlockRDP1 0x01234567 0x89ABCDEF
+
+RDP 0 regression
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug  -ob RDP=0xAA
+
+Read FLASH_NSSR register 
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug -r32 0x40022020 4
+
+Erase OEM1KEY
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug  -lockRDP1 0xFFFFFFFF 0xFFFFFFFF
+
+Erase OEM2KEY
+STM32_Programmer_CLI.exe -c port=SWD mode=hotplug  -lockRDP2 0xFFFFFFFF 0xFFFFFFFF
+
+
+
+
+
+
+
+
+
+
+
